@@ -73,11 +73,8 @@
 	    // Place MTB buffer into 'default' bank of RAM
 	    __CR_MTB_BUFFER(__MTB_BUFFER_SIZE);
 
-	    asdasdasd;
-
     #endif  // defined(__MTB_RAM_BANK)
 
   #endif // (__MTB_BUFFER_SIZE > 0)
 
 #endif // !defined (__MTB_DISABLE)
-
