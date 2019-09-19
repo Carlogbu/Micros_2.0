@@ -17,6 +17,9 @@
 /****** Local Variables *******/
 
 
+tstMyPins stMyPinsConfig[enTotalPins] = INIT_STRUCT;
+
+
 /****** Local Functions *******/
 
 /** @brief
@@ -27,245 +30,81 @@
 
 
 /****** Global Functions *******/
+void PortInit(void)
+{
+	/** initialization Clock In Ports**/
+	SIM->SCGC5 |=SIM_SCGC5_PORTB_MASK;			/**Port B**/
+	SIM->SCGC5 |=SIM_SCGC5_PORTC_MASK;			/**Port C**/
+	SIM->SCGC5 |=SIM_SCGC5_PORTE_MASK;			/**Port D**/
+	SIM->SCGC5 |=SIM_SCGC5_PORTA_MASK;			/**Port A**/
 
- void vnf_cleardisplay(void)
- {
-	GPIOB->PDOR |= GPIO_PDOR_PDO(1<<1);
-	GPIOB->PDOR |= GPIO_PDOR_PDO(1<<16);
-	GPIOB->PDOR |= GPIO_PDOR_PDO(1<<2);
-	GPIOB->PDOR |= GPIO_PDOR_PDO(1<<3);
- }
+	/** Initialization displays **/
+	PORTB->PCR[FirstDisplayControl] = PORT_PCR_MUX(1);			/** Initialization FirstDisplay **/
+	GPIOB->PDDR |= GPIO_PDDR_PDD(1<<FirstDisplayControl);
 
- void clearsegments(void)
- {
-	 	 	 	 	GPIOB->PDOR &= ~(GPIO_PDOR_PDO(1<<17));
-	 	 			GPIOE->PDOR &= ~(GPIO_PDOR_PDO(1<<20));
-	 	 			GPIOE->PDOR &= ~(GPIO_PDOR_PDO(1<<21));
-	 	 			GPIOC->PDOR &= ~(GPIO_PDOR_PDO(1<<7));
-	 	 			GPIOC->PDOR &= ~(GPIO_PDOR_PDO(1<<8));
-	 	 			GPIOC->PDOR &= ~(GPIO_PDOR_PDO(1<<9));
-	 	 			GPIOC->PDOR &= ~(GPIO_PDOR_PDO(1<<10));
- }
+	PORTB->PCR[SecondDisplayControl] = PORT_PCR_MUX(1);		/** Initialization SecondDisplay **/
+	GPIOB->PDDR |= GPIO_PDDR_PDD(1<<SecondDisplayControl);
 
- void vnf_OneHot (uint32_t u32DisplayControl)
- {
-	 if(u32DisplayControl == 1)
-	 {
-		 vnf_cleardisplay();
-		 vnf_clearsegments();
-		 GPIOB->PDOR &= ~(GPIO_PDOR_PDO(1<<1));
-	 }
-	 	 else if(u32DisplayControl ==2)
-	 	 {
-	 		 vnf_cleardisplay();
-	 		 vnf_clearsegments();
-	 		 GPIOB->PDOR &= ~(GPIO_PDOR_PDO(1<<2));
-	 	 }
-	 	 	 else if(u32DisplayControl ==3)
-	 	 	 {
-	 	 		 vnf_cleardisplay();
-	 	 		 vnf_clearsegments();
-	 	 		 GPIOB->PDOR &= ~(GPIO_PDOR_PDO(1<<3));
-	 	 	 }
-	 	 	 	 else if(u32DisplayControl ==4)
-	 	 	 	 {
-	 	 	 		 vnf_cleardisplay();
-	 	 	 		 vnf_clearsegments();
-	 	 	 		 GPIOB->PDOR &= ~(GPIO_PDOR_PDO(1<<16));
-	 	 	 	 }
- }
+	PORTB->PCR[ThirdDisplayControl] = PORT_PCR_MUX(1);			/** Initialization ThirdDisplay **/
+	GPIOB->PDDR |= GPIO_PDDR_PDD(1<<ThirdDisplayControl);
 
- void Bcd2SevenSegments(uint8_t NumToTransform)
- 	 {
- 	 	switch(NumToTransform)
- 	 	{
-  		case (cero):
-  		{
-  			 /*gbA_segment = 0;
-  			 gbB_segment = 1;
-  			 gbC_segment = 1;
-  			 gbD_segment = 0;
-  			 gbE_segment = 0;
-  			 gbF_segment = 0;
-  			 gbG_segment = 0;*/
+	PORTB->PCR[FourthDisplayControl] = PORT_PCR_MUX(1);		/** Initialization FourthDisplay **/
+	GPIOB->PDDR |= GPIO_PDDR_PDD(1<<FourthDisplayControl);
 
-  			/*B Y C*/
-  			GPIOB->PDOR |= GPIO_PDOR_PDO(1<<17);
-  			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<20);
-  			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<21);
-  			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<7);
-  			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<8);
-  			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<9);
+	/**Initialization Segments**/
+	PORTB->PCR[SegmentA] = PORT_PCR_MUX(1);			/** Initialization A segment**/
+	GPIOB->PDDR |= GPIO_PDDR_PDD(1<<SegmentA);
 
+	PORTE->PCR[SegmentB] = PORT_PCR_MUX(1);			/** Initialization B segment**/
+	GPIOE->PDDR |= GPIO_PDDR_PDD(1<<SegmentB);
 
+	PORTE->PCR[SegmentC] = PORT_PCR_MUX(1);			/** Initialization C segment**/
+	GPIOE->PDDR |= GPIO_PDDR_PDD(1<<SegmentC);
 
-  		}break;
- 	 		case (one):
- 	 		{
- 	 			 /*gbA_segment = 0;
- 	 			 gbB_segment = 1;
- 	 			 gbC_segment = 1;
- 	 			 gbD_segment = 0;
- 	 			 gbE_segment = 0;
- 	 			 gbF_segment = 0;
- 	 			 gbG_segment = 0;*/
+	PORTC->PCR[SegmentD] = PORT_PCR_MUX(1);			/** Initialization D segment**/
+	GPIOC->PDDR |= GPIO_PDDR_PDD(1<<SegmentD);
 
- 	 			/*B Y C*/
- 	 			GPIOE->PDOR  |= GPIO_PDOR_PDO(1<<20);
- 	 			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<21);
+	PORTC->PCR[SegmentE] = PORT_PCR_MUX(1);			/** Initialization E segment**/
+	GPIOC->PDDR |= GPIO_PDDR_PDD(1<<SegmentE);
 
- 	 		}break;
- 	 		case  (two):
- 	 	{
- 	 			 /*gbA_segment = 1;
- 	 			 gbB_segment = 1;
- 	 			 gbC_segment = 0;
- 	 			 gbD_segment = 1;
- 	 			 gbE_segment = 1;
- 	 			 gbF_segment = 0;
- 	 			 gbG_segment = 1;*/
- 	 			/*PRIMERO APAGAMOS LOS QUE ESTEN PRENDIDOS*/
+	PORTC->PCR[SegmentF] = PORT_PCR_MUX(1);			/** Initialization F segment**/
+	GPIOC->PDDR |= GPIO_PDDR_PDD(1<<SegmentF);
 
- 	 			/*ACTIVAMOS PARA ESTOS */
- 	 			GPIOB->PDOR |= GPIO_PDOR_PDO(1<<17);
- 	 			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<20);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<7);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<8);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<10);
+	PORTC->PCR[SegmentG] = PORT_PCR_MUX(1);			/** Initialization G segment**/
+	GPIOC->PDDR |= GPIO_PDDR_PDD(1<<SegmentG);
 
- 	 		}break;
- 	 		case (three):
- 	 	{
- 	 			/* gbA_segment = 1;
- 	 			 gbB_segment = 1;
- 	 			 gbC_segment = 1;
- 	 			 gbD_segment = 1;
- 	 			 gbE_segment = 0;
- 	 			 gbF_segment = 0;
- 	 			 gbG_segment = 1;*/
- 	 			/*APAGAR LOS ANTERIORES*/
+	/**initialization Button **/
+	PORTA->PCR[UpButton] = PORT_PCR_MUX(1);			/** Initialization Up Button**/
+	GPIOA->PDDR |= GPIO_PDDR_PDD(0<<UpButton);
 
- 	 			/*SET LOS DE ESTE ESTADO*/
- 	 			GPIOB->PDOR |= GPIO_PDOR_PDO(1<<17);
- 	 			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<20);
- 	 			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<21);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<7);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<10);
+	PORTA->PCR[DownButton] = PORT_PCR_MUX(1);		/** Initialization Down Button**/
+	GPIOA->PDDR |= GPIO_PDDR_PDD(0<<DownButton);
 
- 	 	}break;
- 	 		case (four):
- 	 	{
- 	 			/* gbA_segment = 0;
- 	 			 gbB_segment = 1;
- 	 			 gbC_segment = 1;
- 	 			 gbD_segment = 0;
- 	 			 gbE_segment = 0;
- 	 			 gbF_segment = 1;
- 	 			 gbG_segment = 1;*/
- 	 			/*APAGAR LOS ANTERIORES*/
+	PORTA->PCR[LeftButton] = PORT_PCR_MUX(1);		/** Initialization Left Button**/
+	GPIOA->PDDR |= GPIO_PDDR_PDD(0<<LeftButton);
 
- 	 			/*SET LOS DE ESTE ESTADO*/
- 	 			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<20);
- 	 			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<21);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<9);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<10);
- 	 	}break;
- 	 		case (five):
- 	 	{
- 	 		/*	 gbA_segment = 1;
- 	 			 gbB_segment = 0;
- 	 			 gbC_segment = 1;
- 	 			 gbD_segment = 1;
- 	 			 gbE_segment = 0;
- 	 			 gbF_segment = 1;
- 	 			 gbG_segment = 1;*/
+	PORTA->PCR[RigthButton] = PORT_PCR_MUX(1);		/** Initialization Right Button**/
+	GPIOA->PDDR |= GPIO_PDDR_PDD(0<<RigthButton);
 
- 	 			/*SET LOS DE ESTE ESTADO*/
- 	 			GPIOB->PDOR |= GPIO_PDOR_PDO(1<<17);
- 	 			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<21);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<7);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<9);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<10);
+	PORTA->PCR[RunButton] = PORT_PCR_MUX(1);		/** Initialization Run Button**/
+	GPIOA->PDDR |= GPIO_PDDR_PDD(0<<RunButton);
 
- 	 	}break;
- 	 		case (six):
- 	 	{
- 	 		/*	 gbA_segment = 1;
- 	 			 gbB_segment = 0;
- 	 			 gbC_segment = 1;
- 	 			 gbD_segment = 1;
- 	 			 gbE_segment = 1;
- 	 			 gbF_segment = 1;
- 	 			 gbG_segment = 1;*/
- 	 			/*APAGAR LOS ANTERIORES*/
+	PORTA->PCR[ConfigButton] = PORT_PCR_MUX(1);		/** Initialization Configure Button**/
+	GPIOA->PDDR |= GPIO_PDDR_PDD(0<<ConfigButton);
+}
 
- 	 			/*SET LOS DE ESTE ESTADO*/
- 	 			GPIOB->PDOR |= GPIO_PDOR_PDO(1<<17);
- 	 			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<21);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<7);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<8);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<9);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<10);
- 	 	}break;
- 	 		case (seven):
- 	 	{
- 	 		/*	 gbA_segment = 1;
- 	 			 gbB_segment = 1;
- 	 			 gbC_segment = 1;
- 	 			 gbD_segment = 0;
- 	 			 gbE_segment = 0;
- 	 			 gbF_segment = 0;
- 	 			 gbG_segment = 0;*/
- 	 			/*APAGAR LOS ANTERIORES*/
-
- 	 			/*SET LOS DE ESTE ESTADO*/
- 	 			GPIOB->PDOR |= GPIO_PDOR_PDO(1<<17);
- 	 			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<20);
- 	 			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<21);
-
- 	 	}break;
- 	 		case (eight):
- 	 	{
- 	 	/*		 gbA_segment = 1;
- 	 			 gbB_segment = 1;
- 	 			 gbC_segment = 1;
- 	 			 gbD_segment = 1;
- 	 			 gbE_segment = 1;
- 	 			 gbF_segment = 1;
- 	 			 gbG_segment = 1;*/
-
- 	 			/*SET LOS DE ESTE ESTADO*/
- 	 			GPIOB->PDOR |= GPIO_PDOR_PDO(1<<17);
- 	 			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<20);
- 	 			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<21);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<7);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<8);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<9);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<10);
-
-
- 	 	}break;
- 	 		case  (nine):
- 	 	{
- 	 	/*		 gbA_segment = 1;
- 	 			 gbB_segment = 1;
- 	 			 gbC_segment = 1;
- 	 			 gbD_segment = 0;
- 	 			 gbE_segment = 0;
- 	 			 gbF_segment = 1;
- 	 			 gbG_segment = 1;*/
-
- 	 			/*SET LOS DE ESTE ESTADO*/
- 	 			GPIOB->PDOR |= GPIO_PDOR_PDO(1<<17);
- 	 			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<20);
- 	 			GPIOE->PDOR |= GPIO_PDOR_PDO(1<<21);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<9);
- 	 			GPIOC->PDOR |= GPIO_PDOR_PDO(1<<10);
+void Output ( uint8_t u8Output, tenMyPins enCurrentPin )
+  {
+	  if( u8Output == 1 && stMyPinsConfig[enCurrentPin].u8InputOrOutput == 1)
+	  {
+		  stMyPinsConfig[enCurrentPin].pu32Address |= (1 << stMyPinsConfig[enCurrentPin].enMyPin);
+		  /*GPIOA->PDOR*/
+	  }
+	  else
+	  {
+		  u8Port &= ~(1 << u8Pin);
+	  }
+  }
 
 
 
-
- 	 	}break;
-
- 	 }
- 	 }
