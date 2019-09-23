@@ -39,6 +39,15 @@
 #include "clock_config.h"
 #include "MKL27Z644.h"
 #include "fsl_debug_console.h"
+
+#include "Driver_Debouncer.h"
+#include "gpio_driver.h"
+#include "Shift_Driver.h"
+#include "Temporizador.h"
+
+ static uint32_t Delay =20000;
+ static uint32_t ControlDelay =0;
+
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
@@ -46,22 +55,29 @@
 /*
  * @brief   Application entry point.
  */
-int main(void) {
+void main(void) {
+	void PortInit();
 
-  	/* Init board hardware. */
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
-  	/* Init FSL debug console. */
-    BOARD_InitDebugConsole();
 
-    PRINTF("Hello World\n");
-
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
     while(1) {
-        i++ ;
+    	while(Delay!= 0 )
+    			{
+    				Delay --;
+    			}
+    			Delay = 20000;
+    			ControlDelay++;
+    				vfn_SetTime();
+    				vnf_RunTime();
+    				OneHot(1);
+
+
+
+
+    			if(ControlDelay == 50)
+    			{
+    				ControlDelay=0;
+    			}
+
+
     }
-    return 0 ;
 }

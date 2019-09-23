@@ -1,6 +1,6 @@
 /********************************************************
 *	Author: Gerardo Coronel								*
-*	File Name:  gpio_driver    							*
+*	File Name: Debouncer_driver    							*
 *   Description: 	driver for use gpio functions  		*
 *   													*
 *											 			*
@@ -19,7 +19,7 @@
 /****** Global Variables *******/
 
 
- uint32_t u8IndexButton;
+ uint32_t u32IndexButton;
 
 
 /****** Local Variables *******/
@@ -34,8 +34,8 @@
  static uint32_t dwf_Debouncer(GPIO_Type *bases, uint32_t u32pins)
  	{
 
- 	u32ReadValue[u8IndexButton] = (((bases->PDIR) >> u32pins) & 0x01U);
- 		if(u32ReadValue[u8IndexButton] != u32StableValue[u8IndexButton])
+ 	u32ReadValue[u32IndexButton] = (((bases->PDIR) >> u32pins) & 0x01U);
+ 		if(u32ReadValue[u32IndexButton] != u32StableValue[u32IndexButton])
  		{
  			u32Samples[u32IndexButton][u32Index[Zero]]= u32ReadValue[u32IndexButton];
 
@@ -96,19 +96,19 @@
 
  uint32_t Bnf_CheckLeftButton(void)
   {
-  	u8IndexButton =3;
+  	u32IndexButton =3;
    return dwf_Debouncer(GPIOA,4);
 
   }
  uint32_t Bnf_CheckRunButton(void)
    {
-   	u8IndexButton =4;
+   	u32IndexButton =4;
     return dwf_Debouncer(GPIOA,12);
 
    }
  uint32_t Bnf_CheckConfigButton(void)
    {
-   	u8IndexButton =5;
+   	u32IndexButton =5;
     return dwf_Debouncer(GPIOA,13);
 
    }
