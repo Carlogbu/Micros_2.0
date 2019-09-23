@@ -1,7 +1,7 @@
 /********************************************************
-*	Author: Gerardo Coronel								*
+*	Author: Gerardo Coronel	& Carlo Boubion				*
 *	File Name:  gpio_driver    							*
-*   Description: 	driver for use gpio functions  		*
+*   Description: Driver to use the GPIO functions  	    *
 *   													*
 *											 			*
 *														*
@@ -16,95 +16,72 @@
 
 /****** Local Variables *******/
 
-
-tstMyPins stMyPinsConfig[enTotalPins] = INIT_STRUCT;
-
-
 /****** Local Functions *******/
-
-/** @brief
- *  @param
- *  @param
- *  @return
- */
-
 
 /****** Global Functions *******/
 void PortInit(void)
 {
-	/** initialization Clock In Ports**/
+	/** Clock initialization in ports**/
 	SIM->SCGC5 |=SIM_SCGC5_PORTB_MASK;			/**Port B**/
 	SIM->SCGC5 |=SIM_SCGC5_PORTC_MASK;			/**Port C**/
 	SIM->SCGC5 |=SIM_SCGC5_PORTE_MASK;			/**Port D**/
 	SIM->SCGC5 |=SIM_SCGC5_PORTA_MASK;			/**Port A**/
 
-	/** Initialization displays **/
-	PORTB->PCR[FirstDisplayControl] = PORT_PCR_MUX(1);			/** Initialization FirstDisplay **/
+	/**Display initialization**/
+	PORTB->PCR[FirstDisplayControl] = PORT_PCR_MUX(1);			/** FirstDisplay **/
 	GPIOB->PDDR |= GPIO_PDDR_PDD(1<<FirstDisplayControl);
 
-	PORTB->PCR[SecondDisplayControl] = PORT_PCR_MUX(1);		/** Initialization SecondDisplay **/
+	PORTB->PCR[SecondDisplayControl] = PORT_PCR_MUX(1);		    /** SecondDisplay **/
 	GPIOB->PDDR |= GPIO_PDDR_PDD(1<<SecondDisplayControl);
 
-	PORTB->PCR[ThirdDisplayControl] = PORT_PCR_MUX(1);			/** Initialization ThirdDisplay **/
+	PORTB->PCR[ThirdDisplayControl] = PORT_PCR_MUX(1);			/** ThirdDisplay **/
 	GPIOB->PDDR |= GPIO_PDDR_PDD(1<<ThirdDisplayControl);
 
-	PORTB->PCR[FourthDisplayControl] = PORT_PCR_MUX(1);		/** Initialization FourthDisplay **/
+	PORTB->PCR[FourthDisplayControl] = PORT_PCR_MUX(1);		    /** FourthDisplay **/
 	GPIOB->PDDR |= GPIO_PDDR_PDD(1<<FourthDisplayControl);
 
-	/**Initialization Segments**/
-	PORTB->PCR[SegmentA] = PORT_PCR_MUX(1);			/** Initialization A segment**/
+	/**Segment initialization**/
+	PORTB->PCR[SegmentA] = PORT_PCR_MUX(1);			/** A segment**/
 	GPIOB->PDDR |= GPIO_PDDR_PDD(1<<SegmentA);
 
-	PORTE->PCR[SegmentB] = PORT_PCR_MUX(1);			/** Initialization B segment**/
+	PORTE->PCR[SegmentB] = PORT_PCR_MUX(1);			/** B segment**/
 	GPIOE->PDDR |= GPIO_PDDR_PDD(1<<SegmentB);
 
-	PORTE->PCR[SegmentC] = PORT_PCR_MUX(1);			/** Initialization C segment**/
+	PORTE->PCR[SegmentC] = PORT_PCR_MUX(1);			/** C segment**/
 	GPIOE->PDDR |= GPIO_PDDR_PDD(1<<SegmentC);
 
-	PORTC->PCR[SegmentD] = PORT_PCR_MUX(1);			/** Initialization D segment**/
+	PORTC->PCR[SegmentD] = PORT_PCR_MUX(1);			/** D segment**/
 	GPIOC->PDDR |= GPIO_PDDR_PDD(1<<SegmentD);
 
-	PORTC->PCR[SegmentE] = PORT_PCR_MUX(1);			/** Initialization E segment**/
+	PORTC->PCR[SegmentE] = PORT_PCR_MUX(1);			/** E segment**/
 	GPIOC->PDDR |= GPIO_PDDR_PDD(1<<SegmentE);
 
-	PORTC->PCR[SegmentF] = PORT_PCR_MUX(1);			/** Initialization F segment**/
+	PORTC->PCR[SegmentF] = PORT_PCR_MUX(1);			/** F segment**/
 	GPIOC->PDDR |= GPIO_PDDR_PDD(1<<SegmentF);
 
-	PORTC->PCR[SegmentG] = PORT_PCR_MUX(1);			/** Initialization G segment**/
+	PORTC->PCR[SegmentG] = PORT_PCR_MUX(1);			/** G segment**/
 	GPIOC->PDDR |= GPIO_PDDR_PDD(1<<SegmentG);
 
-	/**initialization Button **/
-	PORTA->PCR[UpButton] = PORT_PCR_MUX(1);			/** Initialization Up Button**/
+	/**Button initialization **/
+	PORTA->PCR[UpButton] = PORT_PCR_MUX(1);			/** Up Button**/
 	GPIOA->PDDR |= GPIO_PDDR_PDD(0<<UpButton);
 
-	PORTA->PCR[DownButton] = PORT_PCR_MUX(1);		/** Initialization Down Button**/
+	PORTA->PCR[DownButton] = PORT_PCR_MUX(1);		/** Down Button**/
 	GPIOA->PDDR |= GPIO_PDDR_PDD(0<<DownButton);
 
-	PORTA->PCR[LeftButton] = PORT_PCR_MUX(1);		/** Initialization Left Button**/
+	PORTE->PCR[RigthButton] = PORT_PCR_MUX(1);		/** Right Button**/
+	GPIOE->PDDR |= GPIO_PDDR_PDD(0<<RigthButton);
+
+	PORTA->PCR[LeftButton] = PORT_PCR_MUX(1);		/** Left Button**/
 	GPIOA->PDDR |= GPIO_PDDR_PDD(0<<LeftButton);
 
-	PORTA->PCR[RigthButton] = PORT_PCR_MUX(1);		/** Initialization Right Button**/
-	GPIOA->PDDR |= GPIO_PDDR_PDD(0<<RigthButton);
-
-	PORTA->PCR[RunButton] = PORT_PCR_MUX(1);		/** Initialization Run Button**/
+	PORTA->PCR[RunButton] = PORT_PCR_MUX(1);		/** Run Button**/
 	GPIOA->PDDR |= GPIO_PDDR_PDD(0<<RunButton);
 
-	PORTA->PCR[ConfigButton] = PORT_PCR_MUX(1);		/** Initialization Configure Button**/
+	PORTA->PCR[ConfigButton] = PORT_PCR_MUX(1);		/** Configure Button**/
 	GPIOA->PDDR |= GPIO_PDDR_PDD(0<<ConfigButton);
 }
 
-void Output ( uint8_t u8Output, tenMyPins enCurrentPin )
-  {
-	  if( u8Output == 1 && stMyPinsConfig[enCurrentPin].u8InputOrOutput == 1)
-	  {
-		  stMyPinsConfig[enCurrentPin].pu32Address |= (1 << stMyPinsConfig[enCurrentPin].enMyPin);
-		  /*GPIOA->PDOR*/
-	  }
-	  else
-	  {
-		  u8Port &= ~(1 << u8Pin);
-	  }
-  }
 
 
 
