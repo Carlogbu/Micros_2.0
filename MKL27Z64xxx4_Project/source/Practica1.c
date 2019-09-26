@@ -39,6 +39,23 @@
 #include "clock_config.h"
 #include "MKL27Z644.h"
 #include "fsl_debug_console.h"
+#include "Debouncer_Driver.h"
+#include "Display_Driver.h"
+#include "gpio_driver.h"
+#include "Process_Driver.h"
+
+uint32_t Delay =2000;
+
+static uint16_t control=1;
+uint16_t primervalor7seg;
+uint16_t segundovalor7seg;
+uint16_t tercervalor7seg;
+uint16_t cuartovalor7seg;
+
+uint32_t entradaconfig;
+uint32_t decrementadorcontrol;
+
+
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
@@ -48,20 +65,39 @@
  */
 int main(void) {
 
-  	/* Init board hardware. */
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
-  	/* Init FSL debug console. */
-    BOARD_InitDebugConsole();
 
-    PRINTF("Hello World\n");
+	while(1)
+	{
+		while(Delay!= 0 )
+		{
+			Delay --;
 
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
-    while(1) {
-        i++ ;
-    }
-    return 0 ;
+		}
+		Delay = 2000;
+		OneHot(control);
+
+	controldepantallas(primervalor7seg,segundovalor7seg,tercervalor7seg,cuartovalor7seg);
+
+
+	Samuel = vnf_DebouncerCheck5();
+	Cris = vnf_DebouncerCheck6();
+	Asignadordevalores();
+
+
+ if (Samuel == 1)
+{
+	 entradaconfig =1;
+	ConfigButton();
+	entradaconfig = 0;
+
+}else if (Cris ==1)
+{
+	decrementadorcontrol =1;
+
+}else
+{
+
+}
+
+}
 }
